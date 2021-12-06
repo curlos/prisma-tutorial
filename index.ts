@@ -36,9 +36,20 @@ app.post('/createManyUsers', async (req: Request, res: Response) => {
   }
 })
 
+app.post('/createManyCars', async (req: Request, res: Response) => {
+  const { carList } = req.body
+
+  const cars = await prisma.car.createMany({
+    data: carList,
+  })
+  res.json(cars)
+})
+
 app.get('/', async (req: Request, res: Response) => {
   try {
-    const users = await prisma.appUser.findMany()
+    const users = await prisma.appUser.findMany({
+      include: { Car: true }
+    })
     res.json(users)
   } catch (err) {
     res.json({ err, })
